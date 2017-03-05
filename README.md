@@ -35,7 +35,7 @@ my $gateway = Discord::Gateway->new({
 $gateway->connect();
 ```
 
-```
+```perl
 package MyBot;
 
 use strict;

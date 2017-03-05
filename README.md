@@ -15,6 +15,7 @@ Perl AnyEvent class and API wrapper for Discord's WS gateway and REST API.
 use strict;
 use warnings;
 
+use MyBot;
 use Discord::Gateway;
 
 my $main_class = MyBot->new();
@@ -38,9 +39,7 @@ $gateway->connect();
 ```perl
 package MyBot;
 
-use strict;
-use warnings;
-
+use Moose;
 use Discord::REST;
 
 sub connected {
@@ -62,6 +61,8 @@ sub connected {
 sub message_received {
     my $self = shift;
     my $vars = shift;
+
+    my $inp = $vars->{d};
 
     if ($vars->{t} eq 'MESSAGE_CREATE') {
         # new message
@@ -92,6 +93,7 @@ sub finished {
     # Connection closed by Discord
 }
 
+no Moose;
 1;
 ```
 

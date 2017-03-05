@@ -3,7 +3,6 @@ package Discord::Gateway;
 use AnyEvent;
 use AnyEvent::WebSocket::Client;
 use Carp qw/carp cluck confess/;
-use Data::Printer;
 use JSON::XS;
 use Moose;
 use Try::Tiny;

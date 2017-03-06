@@ -207,7 +207,7 @@ sub _build_heartbeat_loop {
 sub _build_wss {
     my $self = shift;
 
-    my $uri = URI->new(sprintf("wss://gateway.discord.gg/%s/bot?v=5&encoding=json", $wss->{url}));
+    my $uri = URI->new("wss://gateway.discord.gg/bot?v=5&encoding=json");
 
     return $uri;
 }

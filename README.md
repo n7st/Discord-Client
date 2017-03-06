@@ -1,6 +1,6 @@
 # AnyEvent-Discord
 
-Perl AnyEvent class and API wrapper for Discord's WS gateway and REST API.
+Perl AnyEvent client and for Discord's WS gateway.
 
 ## Usage
 
@@ -16,12 +16,12 @@ use strict;
 use warnings;
 
 use MyBot;
-use Discord::Gateway;
+use Discord::Client;
 
 my $main_class = MyBot->new();
 
 # Initialise
-my $gateway = Discord::Gateway->new({
+my $gateway = Discord::Client->new({
     auth_token     => 'DISCORD AUTH TOKEN HERE',
     user_agent     => 'Some user agent string here',
     callback_class => $main_class,
@@ -96,8 +96,4 @@ sub finished {
 no Moose;
 1;
 ```
-
-## TODO
-
-* Namespace the API properly
 

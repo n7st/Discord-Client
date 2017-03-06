@@ -1,4 +1,4 @@
-package Discord::Gateway;
+package Discord::Client;
 
 use AnyEvent;
 use AnyEvent::WebSocket::Client;
@@ -8,8 +8,6 @@ use Moose;
 use Try::Tiny;
 use URI;
 
-use Discord::REST;
-
 ################################################################################
 
 has auth_token     => (is => 'ro', isa => 'Str',     required => 1);
@@ -17,7 +15,6 @@ has callback_class => (is => 'ro', isa => 'Object',  required => 1);
 has routines       => (is => 'ro', isa => 'HashRef', required => 1);
 has user_agent     => (is => 'ro', isa => 'Str',     required => 1);
 
-has api            => (is => 'ro', isa => 'Discord::REST', lazy_build => 1);
 has heartbeat_loop => (is => 'rw', isa => 'EV::Timer',     lazy_build => 1);
 has wss            => (is => 'ro', isa => 'URI::wss',      lazy_build => 1);
 
@@ -191,15 +188,6 @@ sub _run_external_subroutine {
 
 ################################################################################
 
-sub _build_api {
-    my $self = shift;
-
-    return Discord::REST->new({
-        auth_token => $self->auth_token,
-        ua_string  => $self->user_agent,
-    });
-}
-
 sub _build_heartbeat_loop {
     my $self = shift;
 
@@ -219,12 +207,7 @@ sub _build_heartbeat_loop {
 sub _build_wss {
     my $self = shift;
 
-    my $wss = $self->api->call({
-        method   => 'get',
-        resource => 'gateway',
-    });
-
-    my $uri = URI->new(sprintf("%s/bot?v=5&encoding=json", $wss->{url}));
+    my $uri = URI->new(sprintf("wss://gateway.discord.gg/%s/bot?v=5&encoding=json", $wss->{url}));
 
     return $uri;
 }

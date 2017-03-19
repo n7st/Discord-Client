@@ -5,7 +5,6 @@ use AnyEvent::WebSocket::Client;
 use Carp qw/carp cluck confess/;
 use JSON::XS;
 use Moose;
-use Try::Tiny;
 use URI;
 
 ################################################################################
@@ -51,8 +50,8 @@ sub connect {
 
             $self->sequence_id($content->{s}) if $content->{s};
 
-            $self->hello($content)       if $content->{op} == 10;
-            $self->resume($content)      if $content->{op} == 7;
+            $self->hello($content)  if $content->{op} == 10;
+            $self->resume($content) if $content->{op} == 7;
 
             if ($content->{op} == 0 && $content->{t} eq 'READY') {
                 $self->_initialise($content);
@@ -60,11 +59,7 @@ sub connect {
                     if $self->routines->{connect};
             }
 
-            try {
-                $response = $self->_run_external_subroutine('each_message', $content);
-            } catch {
-                cluck $_;
-            };
+            $response = $self->_run_external_subroutine('each_message', $content);
 
             if ($response && $response->{op} && $response->{d}) {
                 $self->send_op($response->{op} => { d => $response->{d} });
@@ -72,12 +67,9 @@ sub connect {
         });
 
         $self->connection->on(finish => sub {
-            try {
-                $self->_run_external_subroutine('finish', @_);
-                $self->connect();
-            } catch {
-                cluck $_;
-            };
+            $self->connection->close();
+            $self->_run_external_subroutine('finish', @_);
+            $self->connect();
         });
     });
 

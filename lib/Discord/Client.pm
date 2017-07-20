@@ -3,6 +3,7 @@ package Discord::Client;
 use AnyEvent;
 use AnyEvent::WebSocket::Client;
 use Carp qw/carp cluck confess/;
+use EV;
 use JSON::XS;
 use Moose;
 use URI;
